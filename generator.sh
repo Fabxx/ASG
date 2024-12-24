@@ -15,7 +15,7 @@ These emulators don't need sorting and function can be skipped:\n
 # Emulator Arguments
 
 xemu_args="-full-screen -dvd_path"
-xenia_args="--gpu vulkan"
+#xenia_args="--gpu vulkan" currently unused until xenia implements vulkan properly
 pcsx2_args="-fullscreen"
 mgba_args="-f"
 dolphin_args="--config=Dolphin.Display.Fullscreen=True"
@@ -25,25 +25,48 @@ rpcs3_args="--no-gui"
 
 # Wine DLL Overrides for PC games
 
-# Current games that use the overrides: need for speed most wanted/carbon - splinter cell 1/Pandora tomorrow/Chaos Theory - Dirt/2/3/Showdown
+# Current games that use the overrides: 
 
+# need for speed most wanted
+# need for speed carbon
+# splinter cell
+# splinter cell Pandora tomorrow
+# splinter cell Chaos Theory
+# Dirt
+# Dirt 2
+# Dirt 3
+# Dirt Showdown
+# GTA 3 (for ASI Loader and fixes)
+
+# Disable Vulkan for these two games to fix crash
 NFSC_MW_OVERRIDE="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
 
-SC_SCPT_OVERRIDE="*d3d8, *msacm32, *msvfw32=n,b"
+# Extra overrides are for Xbox controller support mod from nexus mods.
+SC_OVERRIDE="*dinput, *dinput8, *xinput1_3, *d3d8, *msacm32, *msvfw32=n,b"
 
-SCCT_OVERRIDE="*d3d9, *msacm32, *msvfw32=n,b"
+SCPT_OVERRIDE="*d3d8, *msacm32, *msvfw32=n,b"
+
+# dinput8 is for Xbox trigger fix 
+SCCT_OVERRIDE="*dinput8, *d3d9, *msacm32, *msvfw32=n,b"
+
+# Fusion Fix for splinter cell conviction
+SCC_OVERRIDE="*dinput8, *version=n,b"
 
 GTA3_OVERRIDE="d3d8=n,b"
 
-# PC Games arguments
+# PC Games arguments 
 
-# Current Arguments: Colin McRae Rally 2005 - Kingdom Come Deliverance - Splinter Cell Chaos Theory
+# Colin McRae Rally 2005 
 
-CMR2005="FORCEHT WIDESCREENDISPLAY NOVIDEO"
+# Kingdom Come Deliverance
+
+# Splinter Cell Chaos Theory
+
+CMR2005_ARGS="FORCEHT WIDESCREENDISPLAY NOVIDEO"
 
 KINGDOMDEV="-devmode"
 
-SCCT_SKIP_VIDEO="-nointro"
+SCCT_ARGS="-nointro"
 
 isXbmcScript=2
 
@@ -183,7 +206,7 @@ Parser()
 		;;
 
 		8) #Dolphin
-		echo -e \""$path_executable"\" "" "--exec=\""$(ls *.wbfs *.wad *.iso *.gcz *.rvz *.dol *.elf)"\"" "$dolphin_args" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" --exec=\""$(ls *.wbfs *.wad *.iso *.gcz *.rvz *.dol *.elf)"\" "$dolphin_args" "\n" >> start.sh
 		;;
 
 		esac
@@ -212,54 +235,59 @@ Parser()
 	4)
 		case $parser_ID in
 
-		1) #Wine
-		# List of games that use the DLLOVERRIDES in the script. 
-		#NOTE: If you renamed your game folder that is in this list, please rename the folder names here to match your folder names.  
+		1) #Wine games that use the DLLOVERRIDES in the script or dedicated prefixes with specific packages
 
-		# gather executable to use in XBMC echos
+		#Get executable name with extension, excluding the absolute path
+		exeFile="$(find ~+ -name '*.EXE' -exec basename {} \;)"
 
-		exeFile="$(find ~+ -name '*.EXE')"
+		if [ "$exeFile" == "SplinterCell.EXE" ]; then
 
-		if [ "$(pwd)" == "$path_games/Tom Clancys Splinter Cell" ]; then 
+			echo -n WINEDLLOVERRIDES=\""$SC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 
-			echo -n WINEDLLOVERRIDES=\""$SC_SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+		elif [ "$exeFile" == "SplinterCell2.EXE" ]; then 
 
-		elif [ "$(pwd)" == "$path_games/Tom Clancys Splinter Cell Pandora Tomorrow" ]; then 
+			echo -n WINEDLLOVERRIDES=\""$SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
 
-			echo -n WINEDLLOVERRIDES=\""$SC_SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
-
-		elif [ "$(pwd)" == "$path_games/Tom Clancys Splinter Cell Chaos Theory" ]; then
+		elif [ "$exeFile" == "splintercell3.EXE" ]; then
 		
-			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> start.sh
 
-		elif [ "$(pwd)" == "$path_games/Need For Speed Carbon" ]; then 
+		elif [ "$exeFile" == "NFSC.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
 
-		elif [ "$(pwd)" == "$path_games/Need For Speed Most Wanted 2005" ]; then 
+		elif [ "$exeFile" == "speed.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 		
-		elif [ "$(pwd)" == "$path_games/Grand Theft Auto III" ]; then 
+		elif [ "$exeFile" == "gta3.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$GTA3_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+		
+		elif [ "$exeFile" == "CMR5.EXE" ]; then 
+		
+			echo -n wine \""$exeFile"\" \""$CMR2005_ARGS"\" >> start.sh 
+	
+	    elif [ "$exeFile" == "Conviction_game.EXE" ]; then 
+		
+			echo -n WINEDLLOVERRIDES=\""$SCC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 
 
-		elif [ "$(pwd)" == "$path_games/Blur" ]; then
+		elif [ "$exeFile" == "Blur.EXE" ]; then
 
 			blurPrefix="/home/$(whoami)/blurpfx"
 			WINEPREFIX="$blurPrefix" wineboot
 			WINEPREFIX="$blurPrefix" winetricks -q vcrun2019 dxvk1030
 			echo -n WINEPREFIX=\""$blurPrefix"\" wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$(pwd)" == "$path_games/Saints Row 2" ]; then
+		elif [ "$exeFile" == "SR2_pc.EXE" ]; then
 			
 			sr2Prefix="/home/$(whoami)/sr2pfx"
 			WINEPREFIX="$sr2Prefix" wineboot
 			WINEPREFIX="$sr2Prefix" winetricks -q vcrun2019 dxvk xact
 			echo -n WINEPREFIX=\""$sr2Prefix"\" wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$(pwd)" == "$path_games/Driver 2" ]; then
+		elif [ "$exeFile" == "REDRIVER2_dev.EXE" ]; then
 		
 			drv2Prefix="/home/$(whoami)/d2pfx"
 
@@ -267,20 +295,21 @@ Parser()
 			
 			echo -n WINEPREFIX=\""$drv2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$(pwd)" == "$path_games/Test Drive Unlimited 2" ]; then
+		# NOTE: For Test Drive Unlimited 2 you need the Offline Launcher.
+
+		elif [ "$exeFile" == "Launcher.EXE" ]; then
 			
 			tdu2Prefix="/home/$(whoami)/tdu2pfx"
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 wineboot
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 winetricks ie7 dotnet40 dxvk1103 dinput8 directplay
 			echo -n WINEPREFIX=\""$tdu2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$(pwd)" == "$path_games/Assetto Corsa Competizione" ]; then
+		elif [ "$exeFile" == "acc.EXE" ]; then
 			
 			accPrefix="/home/$(whoami)/accpfx"
 			WINEPREFIX="$accPrefix" wineboot
 			WINEPREFIX="$accPrefix" winetricks -q vcrun2019 dxvk
 			echo -n WINEPREFIX=\""$accPrefix"\" wine \""$exeFile"\" >> start.sh
-
 
 		else echo wine \""$exeFile"\" >> start.sh
 
@@ -379,7 +408,7 @@ ZenityUI()
 			fi
 			;;
 		5)
-			zenity --info --ellipsize --text="$msg"
+			zenity --info --ellipsize --text="$msg" --width=800 --height=600
 			ZenityUI
 			;;
 	esac
