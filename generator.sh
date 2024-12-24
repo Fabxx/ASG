@@ -42,17 +42,16 @@ rpcs3_args="--no-gui"
 NFSC_MW_OVERRIDE="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
 
 # Extra overrides are for Xbox controller support mod from nexus mods.
-SC_OVERRIDE="*dinput, *dinput8, *xinput1_3, *d3d8, *msacm32, *msvfw32=n,b"
+SC_OVERRIDE="*xinput1_3, *msacm32, *msvfw32=n,b"
 
-SCPT_OVERRIDE="*d3d8, *msacm32, *msvfw32=n,b"
+SCPT_OVERRIDE="*msacm32, *msvfw32=n,b"
 
 # dinput8 is for Xbox trigger fix 
-SCCT_OVERRIDE="*dinput8, *d3d9, *msacm32, *msvfw32=n,b"
+SCCT_OVERRIDE="*d3d9, *msacm32, *msvfw32=n,b"
 
 # Fusion Fix for splinter cell conviction
-SCC_OVERRIDE="*dinput8, *version=n,b"
+SCC_OVERRIDE="*version=n,b"
 
-GTA3_OVERRIDE="d3d8=n,b"
 
 # PC Games arguments 
 
@@ -238,56 +237,57 @@ Parser()
 		1) #Wine games that use the DLLOVERRIDES in the script or dedicated prefixes with specific packages
 
 		#Get executable name with extension, excluding the absolute path
-		exeFile="$(find ~+ -name '*.EXE' -exec basename {} \;)"
 
-		if [ "$exeFile" == "SplinterCell.EXE" ]; then
+		exeFile="$(find ~+ -name '*.EXE')"
+
+		if [ "$(basename "$exeFile")" == "SplinterCell.EXE" ]; then
 
 			echo -n WINEDLLOVERRIDES=\""$SC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 
-		elif [ "$exeFile" == "SplinterCell2.EXE" ]; then 
+		elif [ "$(basename "$exeFile")" == "SplinterCell2.EXE" ]; then 
 
 			echo -n WINEDLLOVERRIDES=\""$SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
 
-		elif [ "$exeFile" == "splintercell3.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "splintercell3.EXE" ]; then
 		
 			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> start.sh
 
-		elif [ "$exeFile" == "NFSC.EXE" ]; then 
+		elif [ "$(basename "$exeFile")" == "NFSC.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
 
-		elif [ "$exeFile" == "speed.EXE" ]; then 
+		elif [ "$(basename "$exeFile")" == "speed.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 		
-		elif [ "$exeFile" == "gta3.EXE" ]; then 
+		elif [ "$(basename "$exeFile")" == "gta3.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$GTA3_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 		
-		elif [ "$exeFile" == "CMR5.EXE" ]; then 
+		elif [ "$(basename "$exeFile")" == "CMR5.EXE" ]; then 
 		
 			echo -n wine \""$exeFile"\" \""$CMR2005_ARGS"\" >> start.sh 
 	
-	    elif [ "$exeFile" == "Conviction_game.EXE" ]; then 
+	    elif [ "$(basename "$exeFile")" == "Conviction_game.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$SCC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
 
 
-		elif [ "$exeFile" == "Blur.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "Blur.EXE" ]; then
 
 			blurPrefix="/home/$(whoami)/blurpfx"
 			WINEPREFIX="$blurPrefix" wineboot
 			WINEPREFIX="$blurPrefix" winetricks -q vcrun2019 dxvk1030
 			echo -n WINEPREFIX=\""$blurPrefix"\" wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$exeFile" == "SR2_pc.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "SR2_pc.EXE" ]; then
 			
 			sr2Prefix="/home/$(whoami)/sr2pfx"
 			WINEPREFIX="$sr2Prefix" wineboot
 			WINEPREFIX="$sr2Prefix" winetricks -q vcrun2019 dxvk xact
 			echo -n WINEPREFIX=\""$sr2Prefix"\" wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$exeFile" == "REDRIVER2_dev.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "REDRIVER2_dev.EXE" ]; then
 		
 			drv2Prefix="/home/$(whoami)/d2pfx"
 
@@ -297,14 +297,14 @@ Parser()
 		
 		# NOTE: For Test Drive Unlimited 2 you need the Offline Launcher.
 
-		elif [ "$exeFile" == "Launcher.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "Launcher.EXE" ]; then
 			
 			tdu2Prefix="/home/$(whoami)/tdu2pfx"
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 wineboot
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 winetricks ie7 dotnet40 dxvk1103 dinput8 directplay
 			echo -n WINEPREFIX=\""$tdu2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> start.sh
 		
-		elif [ "$exeFile" == "acc.EXE" ]; then
+		elif [ "$(basename "$exeFile")" == "acc.EXE" ]; then
 			
 			accPrefix="/home/$(whoami)/accpfx"
 			WINEPREFIX="$accPrefix" wineboot
