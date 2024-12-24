@@ -1,10 +1,10 @@
 # Key Features
 
-- Multiple emulator extension parse
+- Multiple extension parse
 
 - Auto sort roms into folders (Linux only for now)
 
-- Automatic prefix creation and setup (Linux Only, for wine)
+- Automatic prefix creation and setup (Linux Only, for wine users)
 
 - Automatic application of arguments, overrides and such.
 
@@ -23,7 +23,7 @@
 note: emulator names are only for console references, if you have these file extensions it will be supported anyways.
 
 ```
-PC (.exe)
+PC (.EXE)
 
 PCSX2 (.iso | .chd)
 
@@ -57,23 +57,23 @@ Rpcs3 (EBOOT.BIN)
 ```
 # Depencies (Linux)
 
-- For PC Parser: `winetricks` | `wine` 
+- For PC Parser:        `winetricks` | `wine` 
 
-- Main Depency: `Zenity` for UI.
+- Main Depency:         `Zenity` for UI.
 
-  Debian/Ubuntu  `sudo apt install zenity wine winetricks`
+  Debian/Ubuntu:        `sudo apt install zenity wine winetricks`
 
-  Arch 	   	 `sudo pacman -S zenity wine winetricks`
+  Arch Linux: 	   	    `sudo pacman -S zenity wine winetricks`
+
+  OpenSUSE Tumbleweed:   should work out of the box
 
 # Initial Setup
 
-- (PC games only - Linux users) First of all, setup your games by following the `Game Setups.txt` document.
+- [`PC games - Linux`) setup your games by following the `Game Setups.txt` document.
 
-- the script looks for `.EXE`, rename the extension of your main exe tu run to .EXE 
+- the script looks for `.EXE`, rename the extension of your main exe tu run in uppercase. 
 
-- (Linux only for now) If you need to auto sort, put all files and covers in the same folder. The files must have the same names.
-
-- (Linux Only) Games that require specific prefix must have the same name folder as in the script to be detected. 
+- [Linux] If you need to auto sort, put all files and covers in the same folder. The files must have the same names. 
 
 # How to use (shell file)
 
@@ -81,13 +81,9 @@ Rpcs3 (EBOOT.BIN)
 
 - Run the script: `./generator.sh >/dev/null 2>&1` (if you want terminal logging, remove the `>/dev/null 2>&1`)
 
-- Choose the parser you need
-
-- Setup the paths when asked to do so
+- Choose the parser you need and setup the paths when asked to do so
 
 - The program can sort the rom files and cover images into folders for you if you haven't. More info in the option 5 of the Menu.
-
-NOTE: The linux script is case sensitive and looks specifically for `.EXE`, so rename your main executable extension like that.
 
 # How to use (Powershell file)
 
@@ -101,9 +97,6 @@ NOTE 1: do NOT write paths with double/single quotes in them.
 
 NOTE 2 (for XBMC users): on windows some applications can restart and change the PID name, and the ps1 script will fail to detect the pid of the launcher app
 and will open XBMC again. I can't do much about it. This is not the case for emulators
-
-NOTE 3: The script looks for `.EXE`, rename the extension of the exe to use in uppercase.
-
 
 # [Extra] Integrating with steam rom manager
 
