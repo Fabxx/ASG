@@ -1,0 +1,588 @@
+BASE WINE PREFIX SETUP
+
+wine and winetricks
+
+sudo winetricks --self-update
+
+winetricks dxvk vkd3d
+
+run winecfg and in libraries add: dinput8 and d3d8 as native, builtin (needed for older games)
+
+here you can find a list of those games that need more stuff to be fixed
+
+DEDICATED PREFIXES AND OVERRIDES SETUP:
+
+Use ASG Script from my repo, it will automatically handle wine overrides and arguments for games that need them.
+
+Overrides are written in this document for documentation purposes.
+
+
+
+CONTROLLER SETUP (If using a non XInput controller):
+
+install xboxdrv, if using a dualsense use ds360 wrapper. Compile it with make and run the executable.
+
+The controller tester should report the controller as "Xbox 360 controller":
+
+https://hardwaretester.com/gamepad
+
+
+
+SPECIFIC GAME SETUPS:
+
+
+Assetto Corsa
+
+
+1) Install from Steam in a EXT4 partition with proton 5.0.x in compatibilty settings
+
+2) run once
+
+3) use protonUpQT and install protonGE for steam, reboot steam and change compat for the game to ProtonGE
+
+4) run assetto corsa again.
+
+
+ADD CONTENT MANAGER SUPPORT
+
+Install the content manager by following their guide, rename AssettoCorsa.exe with any name.
+
+then: ln "Content Manager.exe" AssettoCorsa.exe to replace the main executable with the manager
+
+
+then go into SteamLibrary/steamapps/compatdata/244210/pfx/drive_c/Program Files (x86)/Steam/config/
+
+make a symlink towards the steam login file, so the manager can see the logged users in steam:
+
+ln -s "/home/username/.steam/root/config/loginusers.vdf" .  where the dot is the current game directory where the manager is.
+
+
+CUSTOM SHADER PATCH SUPPORT:
+
+winecfg through protontricks:
+
+protontricks 244210 winecfg
+
+
+in "Libraries" add: dwrite (native, builtin)
+
+
+run the manager, give to it the game path, username and install FBX and 7zip plugins
+
+to install the shader patch drag & drop the archive in the manager UI.
+
+
+If there are UI glitches disable hardware acceleration from the manager UI.
+
+DON'T FULL SCREEN THE CONTENT MANAGER OR IT WILL FREEZE
+
+
+Download the Verdana font for the game:
+
+https://acstuff.ru/u/blob/ac-fonts.zip
+
+extract font folder into game path, specifically:
+
+content/fonts/system
+
+
+
+ASSASSIN'S CREED 1
+
+
+run from Dx9 executable
+
+
+-LANGUAGE:
+
+wine regedit
+
+HKEY_LOCAL_MACHINE/SOFTWARE/WOWNODE6432
+
+make a Ubisoft
+
+make a REG_SZ registry called "Language"
+
+change value based on the language you want to use (if supported). Example: "Italian"
+
+
+ASSASSIN'S CREED 2
+
+Install the ubisoft game launcher form the "redist" folder of the game
+
+run from AssassinsCreedIIGame.exe
+
+
+
+ASSASSIN'S CREED REVELATIONS
+
+
+Remove SystemDetection.dll to avoid flickering
+
+
+ASSASSIN'S CREED SYNDICATE
+
+In video settings don't use Anti Aliasing greater than FXAA or it will cause artifacts
+
+Language settings are split in 2 parts, in "SOUND" and Visual sections
+
+
+IMPROVEMENTS:
+
+Skip intro videos 
+
+Go to <path-to-game>\videos\.
+
+Delete files UbisoftLogo.bk2 and pc_twimtbp.bk2.
+
+Go to <path-to-game>\videos\ and then choose one of the languages folders.
+
+Delete files Epilepsy.bk2, PC_WarningSaving.bk2, and warning_disclaimer.bk2.
+
+
+Unlock cloth physics
+
+    Cloth physics locked to 30 FPS but can be unlocked.
+
+    Go to the configuration file location.
+    Open AC.ini.
+    Go to the [Options] section.
+    Change FlexibleMotionSimulationFPS=0 to FlexibleMotionSimulationFPS=1. Add the parameter manually if it does not exist.
+    Save your changes.
+
+
+
+BIOSHOCK/BIOSHOCK 2
+
+Run from BioshockHD.exe
+
+change language from steam_emu.ini
+
+
+BIOSHOCK INFINITE
+
+to change language go to steam_api.ini
+
+
+BLUR
+
+Requires prefix with dxvk1030
+
+
+BULLY
+
+apply silent patch
+
+
+Audio might have issues.
+
+
+BUGS BUNNY LOST IN TIME
+
+apply crack and widescreen fix
+
+run from BugsBunny.exe
+
+configurator settings:
+
+-full screen
+
+-3D Graphics without graphics card for fast computers (if applying with 3D card there will be artifacts because of the required old 24-bit color depth.)
+
+
+
+COD 4 MODERN WARFARE
+
+run from iw4sp.exe
+
+
+COD BLACK OPS/COD GHOSTS
+
+crasha all'avvio
+
+
+
+COD BLACK OPS 2
+
+crashes on startup
+
+COD BLACK OPS 3
+
+Install steam in your wine prefix
+
+Install p2p release of the game wich includes fixes and boiii client
+
+to change language rename localization_en.txt in localization.txt
+
+
+
+COD MODERN WARFARE 3
+
+crashes at startup
+
+
+
+COLIN MCRAE DIRT/DIRT 2/DIRT 3/DIRT SHOWDOWN
+
+might need to install in HDD to avoid issues.
+
+if audio doesn't work install openAL 32 and apply the following override: WINEDLLOVERRIDES="*openal32=n, b"
+
+use language selector to switch language, in wine run it with virtual desktop at a low resolution to avoid UI issues.
+
+
+
+COLIN MCRAE RALLY 3
+
+install silent patch
+
+NOTA: videos and music don't work, requires windows media player 52 during installation.
+
+
+COLIN MCRAE RALLY 04
+
+apply widescreen fix
+
+
+COLIN MCRAE RALLY 2005
+
+apply patch win10 and service area crash fix if not using a repack
+
+
+DRIVER SAN FRANCISCO
+
+run from Driver.exe
+
+change language from gameconfig.txt in "defaults" section or in game settings.
+
+EURO TRUCK SIMULATOR 2
+
+steam_emu.ini to change language
+
+
+F1 2010
+
+
+apply xless.dll patch to save the game (from pcgamingwiki)
+
+patch the executable with netcore 4gb patch
+
+change language with the language changer.
+
+NOTE: per qualche motivo il language changer se si seleziona italiano mette spagnolo. Selezionare spagnolo per mettere italiano se capita.
+
+run from f1_2010.exe
+
+
+F1 2012
+
+external translation might be needed
+
+run from f1_2012.exe
+
+
+
+F1 2013
+
+ installer might need the following package: winetricks mfc42 if using a repack
+
+change language from steam_api.ini
+
+
+FAR CRY 3
+
+DXVK might not render text, same with WineD3D.
+
+to fix this, add from winetricks d3dx11_43
+
+
+GTA 3
+
+Apply the xbox conversion mod 1.06 from modDB (includes widescreen, controller support etc)
+
+apply netcore 4gb patch to the executable.
+
+apply from winecfg d3d8=native,builtin
+
+
+GTA VICE CITY
+
+use reviced modpack: https://steamcommunity.com/sharedfiles/filedetails/?id=3152156728
+
+includes essential improvements and fixes
+
+from winecfg apply: dinput8 d3d8 as native, builtin
+
+
+
+
+GTA SA
+
+apply the PS2 Features to PC mod: https://steamcommunity.com/sharedfiles/filedetails/?id=1349985839
+
+run from gta-sa.exe, might need to click any button if screen is stuck
+
+
+
+
+GTA IV Complete Edition
+
+
+apply fusion fix mod to improve the game
+
+run from GTA IV.EXE
+
+
+MAFIA THE CITY OF LOST HEAVEN
+
+in the game configurator disable "w buffer" and use "hardware transformation and illumination"
+
+
+MAFIA 2
+
+change language from steam_emu.ini
+
+
+MIRROR'S EDGE
+
+requires re-installation if the registries in wine are lost.
+
+
+to change language:
+
+c:/users/username/Documents/EA Games/Mirror's Edge/TdGame/Config/
+
+open TdEngine.ini and change Language=int with Language=yourLanguagePrefix (can be ita, eng, etc)
+
+
+NFS CARBON
+
+in winecfg use d3d8 and dinput8 as native, builtin
+
+disable dxvk: WINEDLLOVERRIDES="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
+
+Apply widescreen fix and XTented Input to make Xinput controllers work by default
+
+
+
+NFS MOST WANTED 2005
+
+same as carbon.
+
+Extra: apply widescreen fix, and apply the following mods:
+
+
+Xbox 360 Stuff 3.2
+NFSMostWanted.WidescreenFix
+NFS HD Reflections
+FrontEndShadows
+Xtended Input
+ExtraOptions
+EA HD LOGO
+Xenon Effects
+Recompiled Vinyls
+Uncensored EA TRAX
+NFSMostWanted.XboxRainDroplets
+
+
+Comparison between vanilla:
+
+https://imgur.com/pbcm7WC
+
+x360 stuff with mods:
+
+https://imgur.com/O4c0OeT
+
+
+
+NFS UNDERGROUND/UNDERGROUND 2
+
+apply Xtended input and widescreen fix.
+
+use language switcher to change language from gamecopyworld or pcgamingwiki
+
+
+
+NEED FOR SPEED 2015
+
+play with proton experimental from steam
+
+EXTRA: for UNITE mod, download frosty mod manager patched for linux from nexus mods
+
+get the fbpack and extract it
+
+in mod manager create a "nfs" profile
+
+select the fmods from frosty mod manager and install them.
+
+NOTE: in the manager order the mod loading with "Priority" filter
+
+in the steam shortcut add these launch options:
+
+WINEDLLOVERRIDES="winmm=n,b" %command% -dataPath "ModData/nfs"
+
+
+
+
+NFS WORLD (Offline Server + Freeroam spark server mods)
+
+
+1) Make a 32 bit wine prefix
+
+2) Install java 8 update 51 32 bit in the prefix
+
+3) Get the game files from the soapbox race world launcher (or vanilla files from a torrent), if using launcher select a CDN that contains the game files
+
+4) login into FRSS, press play and it will download the mod files
+
+5) make a copy of the game files
+
+6) copy paste the downloaded mods into the MODS folder of nfs world
+
+7) create a Offline Server folder inside NFSW folder, drag & drop the spark server files
+
+8) Remove unnecessary files (if exist): 7z.dll, fmt.dll, global.ini, LIBEAY32.dll, ModLoader.asi, SSLEAY32.dll and zlib1.dll
+
+9) override dinput8.dll as native, builtin in the wine prefix to load the mods
+
+10) TO import your profile from FRSS, first export it from their dedicated website (ask on their discord)
+
+11) after exporting, extract the profile into SparkOffline/www/soapbox/Engine.svc/
+
+12) Launch  nfsw.jar to launch the server with java runned from wine (portable x86) and your prefix:
+
+WINEPREFIX="/home/fabx/nfswpfx" WINEARCH=win32 wine "path/to/bin/java.exe" -jar "/path/to/SparkOffline/nfsw-srv.jar"
+
+
+
+
+
+
+
+NFS WORLD (Online Server)
+
+Go figure.
+
+
+FORZA HORIZON 4
+
+add game to steam with proton experimental and run it
+
+use protontricks and install vcrun2020 in prefix
+
+
+RATCHET & CLANK RIFT APART
+
+currently crashes from proton experimental, needs retest
+
+
+RACE DRIVER GRID
+
+might require openAL
+
+change language from language_Setup.exe or any language changer from gamecopyworld/pcgamingwiki
+
+Apply netcore 4gb patch to game exe
+
+
+RISE OF THE TOMB RAIDER
+
+crashes on startup
+
+
+SAINTS ROW 2
+
+requires xact from winetricks for audio.
+
+
+SLEEPING DOGS
+
+freezes with white screen
+
+
+SPIDERMAN WEB OF SHADOWS
+
+freezes with black screen
+
+
+
+SPLINTER CELL CONVICTION:
+
+Apply fusion fix mod
+
+apply version.dll override as native, builtin from winecfg or as a command.
+
+
+SPLINTER CELL BLACKLIST:
+
+run from "blacklistLaunhcer.exe"
+
+
+TEST DRIVE UNLIMITED 2
+
+requires 32bit prefix:
+
+WINEPREFIX="/path/to/prefix" WINEARCH=win32 winetricks -q dotnet40 dxvk1103 ie7 dinput8 directplay
+
+use offline launcher from gamecopyworld and run from Launcher.exe
+
+can change language in game.
+
+
+
+THIEF
+
+run from binaries2/win64
+
+
+SPLINTER CELL
+
+drag & drop dgvoodo.exe dgvoodo.conf, D3D8.DLL from MS/x86 in src folder
+
+open dgvoodo, tab directX
+
+select GeForce 4 Ti 4800 256mb, your resolution, force vsync.
+
+apply.
+
+then apply widescreen fix
+
+Apply xbox controller support mod from nexus mods.
+
+open ini file of widescreen fix and set "ForceShadowBuffer" to 0.
+
+need dxvk + WINEDLLOVERRIDES="*xinput1_3, *d3d8, *msacm32, *msvfw32=n,b"
+
+to change language go into system/SplinterCell.ini
+
+find Language=int and change the value from int to value of your language.
+
+
+
+
+SPLINTER CELL PANDORA TOMORROW
+
+same as splinter cell
+
+
+SPLINTER CELL CHAOS THEORY
+
+apply widescreen fix and xinput trigger fix
+
+edit widescreenfix.ini: DisableAltTabFix to 1
+
+change game language in:
+
+SplinterCell3.ini e Settings.ini
+
+run with dxvk1103 and with following dlloverrides
+
+WINEDLLOVERRIDES="*d3d9, *msacm32, *msvfw32=n,b"
+
+
+PRINCE OF PERSIA TRILOGY
+
+Go figure.
+
+
+
