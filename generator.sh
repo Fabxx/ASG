@@ -15,7 +15,7 @@ These emulators don't need sorting and function can be skipped:\n
 # Emulator Arguments
 
 xemu_args="-full-screen -dvd_path"
-#xenia_args="--gpu vulkan" currently unused until xenia implements vulkan properly
+xenia_args="--gpu vulkan"
 pcsx2_args="-fullscreen"
 mgba_args="-f"
 dolphin_args="--config=Dolphin.Display.Fullscreen=True"
@@ -36,7 +36,6 @@ rpcs3_args="--no-gui"
 # Dirt 2
 # Dirt 3
 # Dirt Showdown
-# GTA 3 (for ASI Loader and fixes)
 
 # Disable Vulkan for these two games to fix crash
 NFSC_MW_OVERRIDE="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
@@ -47,7 +46,7 @@ SC_OVERRIDE="*xinput1_3, *msacm32, *msvfw32=n,b"
 SCPT_OVERRIDE="*msacm32, *msvfw32=n,b"
 
 # dinput8 is for Xbox trigger fix 
-SCCT_OVERRIDE="*d3d9, *msacm32, *msvfw32=n,b"
+SCCT_OVERRIDE="*dinput8, *d3d9, *msacm32, *msvfw32=n,b"
 
 # Fusion Fix for splinter cell conviction
 SCC_OVERRIDE="*version=n,b"
@@ -248,10 +247,6 @@ Parser()
 
 			echo -n WINEDLLOVERRIDES=\""$SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
 
-		elif [ "$(basename "$exeFile")" == "splintercell3.EXE" ]; then
-		
-			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> start.sh
-
 		elif [ "$(basename "$exeFile")" == "NFSC.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
@@ -271,6 +266,12 @@ Parser()
 	    elif [ "$(basename "$exeFile")" == "Conviction_game.EXE" ]; then 
 		
 			echo -n WINEDLLOVERRIDES=\""$SCC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+
+		elif [ "$(basename "$exeFile")" == "splintercell3.EXE" ]; then
+			scctPrefix="/home/$(whoami)/scctpfx"
+			WINEPREFIX="$scctPrefix" wineboot
+			WINEPREFIX="$scctPrefix" winetricks -q dxvk1103
+			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" WINEPREFIX=\""$scctPrefix"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> start.sh
 
 
 		elif [ "$(basename "$exeFile")" == "Blur.EXE" ]; then
