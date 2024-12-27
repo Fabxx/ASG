@@ -27,8 +27,9 @@ rpcs3_args="--no-gui"
 
 # Current games that use the overrides: 
 
-# need for speed most wanted
-# need for speed carbon
+# need for speed most wanted (WineD3D)
+# need for speed carbon (WineD3D)
+# grand theft auto 3/vice city/san andreas (WineD3D)
 # splinter cell
 # splinter cell Pandora tomorrow
 # splinter cell Chaos Theory
@@ -37,8 +38,8 @@ rpcs3_args="--no-gui"
 # Dirt 3
 # Dirt Showdown
 
-# Disable Vulkan for these two games to fix crash
-NFSC_MW_OVERRIDE="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
+# Disable Vulkan for old games to fix crash or graphical glitches
+DXVK_OFF="*d3d9,*d3d10,*d3d10_1,*d3d10core,*d3d11,*dxgi=b"
 
 # Extra overrides are for Xbox controller support mod from nexus mods.
 SC_OVERRIDE="*xinput1_3, *msacm32, *msvfw32=n,b"
@@ -249,15 +250,23 @@ Parser()
 
 		elif [ "$(basename "$exeFile")" == "NFSC.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh
 
 		elif [ "$(basename "$exeFile")" == "speed.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$NFSC_MW_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
 		
 		elif [ "$(basename "$exeFile")" == "gta3.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$GTA3_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+		
+		elif [ "$(basename "$exeFile")" == "gta-vc.EXE" ]; then 
+		
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+		
+		elif [ "$(basename "$exeFile")" == "gta-sa.EXE" ]; then 
+		
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
 		
 		elif [ "$(basename "$exeFile")" == "CMR5.EXE" ]; then 
 		
