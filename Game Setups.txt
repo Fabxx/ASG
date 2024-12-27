@@ -1,0 +1,524 @@
+NOTE: some old games might work better on HDDrather than SSD.
+
+This document shows how to setup properly the games before running the script that will generate the shell runners.
+
+Here are specified what patches are needed, fixes and so on for some games.
+
+Ignore the DLLOVERRIDES, WINETRICKS and PREFIX tips, those are already integrated in the script.
+
+so basically just apply the patches/fixes for controllers, widescreens ecc and then the script will allow you to apply
+fixes for those individual games that need it. The specific games are listed in the UI of the generator so you will know
+what game will need it.
+
+Also, some games are pretty old and do not have controller support, for now i've suggested only a couple of antimicroX profiles to play with them.
+
+-------------GAME SETUPS-----------------
+
+ASSASSIN'S CREED
+
+base prefix
+
+run from Dx9 executable
+
+
+ASSASSIN'S CREED 2
+
+base prefix
+
+Install ubisoft game launcher in prefix
+
+run from AssassinsCreedIIGame.exe
+
+
+ASSASSIN'S CREED BROTHERHOOD
+
+base prefix
+
+Install ubisoft game launcher in prefix
+
+run from ACBSP.exe
+
+
+ASSASSIN'S CREED REVELATIONS
+
+base prefix
+
+in game folder remove/rename SystemDetection.dll
+
+run from ACRSP.exe
+
+
+ASSASSIN'S CREED 3 (not remastered)
+
+base prefix
+
+run from AC3SP.exe
+
+
+ASSASSIN'S CREED 4
+
+base prefix
+
+run from AC4BFSP.exe
+
+
+ASSASSIN'S CREED ROGUE
+
+base prefix
+
+run from ACC.exe
+
+
+BATTLEFIELD 3
+
+base prefix
+
+run from bf3.exe
+
+
+BATTLEFIELD BAD COMPANY 2
+
+base prefix
+
+run from BFBC2game.exe
+
+Controller not supported
+
+Requires a language changer from gamecopyworld to cahnge the language.
+
+
+BIOSHOCK/BIOSHOCK 2 Remastered
+
+base prefix
+
+run from BioshockHD.exe
+
+
+BIOSHOCK INFINITE
+
+base prefix
+
+run from BioShockInfinite.exe
+
+
+BLUR
+
+needs dedicated prefix with vcrun2019 dxvk1030
+
+
+BORDERLANDS/BORDERLANDS 2/BORDERLANDS THE PRE-SEQUEL
+
+base prefix
+
+BULLY
+
+base prefix
+
+Problem with audio corruption and extremely loud.
+
+
+BURNOUT PARADISE - the ultimate box
+
+base prefix
+
+run from BurnoutParadise.exe
+
+
+COD 4 MODERN WARFARE
+
+base prefix
+
+run from iw3sp.exe
+
+COD BLACK OPS/COD GHOSTS
+
+crashes on startup
+
+COD BLACK OPS 2
+
+???
+
+COD BLACK OPS 3
+
+Install the game, install the boiii client, install steam on your system and run with proton experimental
+
+(also works with lastes P2P Repack, which alredy contains the boiii client)
+
+
+COD MODERN WARFARE 3
+
+base prefix
+
+
+
+COLIN MCRAE DIRT
+
+base prefix + openal32 installed in the prefix.
+
+uses openal32 override from script.
+
+run DiRT.exe
+
+
+COLIN MCRAE RALLY 3
+
+base prefix
+
+install silent patch
+
+NOTE: some frontend videos and musics might not work, game installer says it requires windows media player 5x or 6x, but even with wmp9 package from winetricks
+      this doesn't seem to work.
+
+COLIN MCRAE RALLY 04
+
+base prefix, need dgvoodo for widescreen fix.
+
+NOTE: some frontend videos and musics might not work, game installer says it requires windows media player 5x or 6x, but even with wmp9 package from winetricks
+      this doesn't seem to work.
+
+
+COLIN MCRAE RALLY 2005
+
+Base prefix, requires modern fixes from gamecopyworld + service area crash fix.
+
+NOTE: some frontend videos and musics might not work, game installer says it requires windows media player 5x or 6x, but even with wmp9 package from winetricks
+      this doesn't seem to work.
+
+
+CRYSIS 3/CRYSIS 2
+
+base prefix, run from exe in Bin32 folder.
+
+
+DIRT 2/DIRT 3/DIRT SHOWDOWN
+
+base prefix + openAL32
+
+uses openal32 override
+
+
+DRIVER SAN FRANCISCO
+
+base prefix
+
+run from Driver.exe
+
+
+EURO TRUCK SIMULATOR 2
+
+base prefix
+
+
+F1 2010
+
+base prefix
+
+requires xless.dll patch to save the game. Get it from pcgamingwiki
+
+patch the game exe with ntcore 4gb patch to avoid crashes.
+
+run from f1_2010.exe
+
+F1 2012
+
+base prefix
+
+run from f1_2012.exe
+
+
+F1 2013 / F1 2014
+
+crashes on startup. more testing needed.
+
+
+FAR CRY 3
+
+base prefix + d3dx11_43 from winetricks
+
+with this package text should render.
+
+
+FLATOUT ULTIMATE CARNAGE
+
+base prefix
+
+run from launcher.exe
+
+GTA IV - the complete edition
+
+base prefix
+
+run from GTA IV.EXE
+
+GTA V
+
+base prefix
+
+MAFIA - the city of lost heaven
+
+base prefix
+
+in the game configurator go to the advanced options and disable "w buffer" and enable "use hardware transformation and illumination"
+
+
+MAFIA 2
+
+base prefix
+
+Run from mafia2.exe
+
+MIRROR'S EDGE
+
+crashes on startup
+
+NFS CARBON
+
+base prefix
+
+apply patch 1.4 for the game if the game isn't a repack with it already
+
+apply the widescreen fix for carbon
+
+uses DXVK overrides to disable it
+
+NFS MOST WANTED
+
+base prefix
+
+apply patch 1.3 if you haven't
+
+uses DXVK overrides to disable it.
+
+
+NFS HOT PURSUIT/PRO STREET/ RIVALS/ MW 2012/THE RUN/SHIFT
+
+base prefix
+
+
+NFS SHIFT 2
+
+crashes on startup
+
+
+NFS UNDERGROUND/UNDERGROUND 2
+
+base prefix
+
+apply the lastes patch for the game.
+
+apply Xtended input for controller and widescreen fix.
+
+
+PAYDAY 2
+
+base prefix
+
+
+RACE DRIVER GRID
+
+base prefix + openal32 installed in prefix.
+
+uses openal32 override
+
+Apply ntcore 4gb in the game exe to avoid crashes.
+
+RISE OF THE TOMB RAIDER
+
+crashes on startup
+
+
+SAINTS ROW 2
+
+base prefix + xact package from winetricks for audio.
+
+
+SLEEPING DOGS
+
+stuck in white screen.
+
+
+SPIDERMAN SHATTERED DIMENSIONE
+
+base prefix
+
+
+SPIDERMAN WEB OF SHADOWS
+
+black screen
+
+
+SPLINTER CELL BLACKLIST:
+
+base prefix
+
+run from "blacklistLauncher.exe"
+
+NOTE: it is recommended to apply the 1.03 crack since the game fails for uplay connection check and freezes.
+
+
+TEST DRIVE UNLIMITED 2
+
+create a 32 bit prefix with:
+
+WINEPREFIX="/path/to/prefix/prefix_tdu2" WINEARCH=win32 winetricks -q dotnet40 dxvk1103 ie7 dinput8 directplay
+
+use offline custom launcher from gamecopyworld
+
+run from Launcher.exe
+
+
+
+THIEF
+
+base prefix
+
+run from binaries2/win64
+
+
+SPLINTER CELL
+
+base prefix
+
+put dgvoodo.exe e dgvoodo.conf in the src folder of the game.
+
+put the D3D8.DLL form MS/x86 folder in src folder
+
+open dgvoodo, go to DirectX tab
+
+select GeForce 4 Ti 4800 256mb, 1920x1080, force vsync.
+
+apply
+
+then use the widescreen fix from thirteenAG
+
+open the  ini file of the widescreen fix and put "ForceShadowBuffer" to 0.
+
+uses SC_SCPT overrides in the shell script generator
+
+to change language go to system/SplinterCell.ini
+
+find: Language=int and change the "int" type.
+
+no controller support, use antimicroX to map controller to keyboard. below i specified a handy profile for the buttons.
+
+
+
+SPLINTER CELL PANDORA TOMORROW
+
+dgvoodo.exe e dgvoodo.conf in offline/system/
+
+D3D8.DLL from MS/x86 in  offline/system/
+
+open dgvoodo, directX rab
+
+select GeForce 4 Ti 4800 256mb, 1920x1080, forza vsync.
+
+apply.
+
+use widescreen fix
+
+aopen ini file of widescreen fix and set "ForceShadowBuffer" to 0.
+
+uses SC_SCPT overrides in shell script generator
+
+for the language same as splinter cell but in SplinterCell2.ini
+
+no controller support, use antimicroX.
+
+
+SPLINTER CELL CHAOS THEORY
+
+dedicated prefix with vcrun2019 and dxvk1103
+
+use widescreen fix
+
+use xinput fix (might still not work for triggers on controller, if that's the case do what's written below.)
+
+edit the widescreen fix ini script and find DisableAltTabFix set it to 1.
+
+change language from:
+
+SplinterCell3.ini and Settings.ini
+
+
+uses SCCT Overrides from shell script generator.
+
+
+controller i supported but triggers don't work, map the triggers with animicroX to the left and right mouse button.
+
+
+
+SPLINTER CELL CONVICTION
+
+recommended to use a repack with patches in it.
+
+apply the controller fix, get it from here:
+
+https://drive.google.com/file/d/14lU8WITCHfYBpyuVO3Uoy9Ql-JJcwbka/view
+
+remove systemdetection.dll, run the game from conviction_game.exe for the first time, ignore the detection error message
+
+close the game. then go into your prefix path:
+
+prefix/drive_c/ProgramData/Ubisoft/Conviction/
+
+open file ConvictionUserPC.ini
+
+find:
+
+[Inputs]
+ControllerType=KT_xxx (if you use a logitech controller you will find KT_LOGITECH)
+
+change with KT_X360
+
+in game set refresh rate to 60Hz, some decorative objects like flags have broken physics if above 60Hz
+
+to fix audio stutter and crackling:
+
+WINEPREFIX="/path/to/used/prefix" wine taskmgr
+
+service tab and find conviction_game.exe
+
+set CPU affinity to all the cores you have
+
+NOTE: unfortunately the game forces its affinity to 1 core every time we load a level or we go back to the main menu
+
+i still have to find a way to set the affinity to all cores ever x minutes without booting the game again.
+
+-----------------------------------------------------------------------------------------
+
+ANTIMICROX Maps
+
+Splinter cell:
+
+W A S D: left analog
+
+mouse up/down: right analog
+
+D-PAD right: number 3 (NOT THE NUMPAD)
+
+D-PAD left: number 2 (NOT THE NUMPAD)
+
+D-PAD Down: left ctrl
+
+Left trigger: right mouse button
+
+right trigger: left mouse button
+
+A: Enter
+
+B: C
+
+X: E
+
+Y: left shift
+
+START: ESC
+
+left analogue click: Q
+
+right analogue click: Z
+
+left dorsal: L (in game change the keyboard button for "speed movement +" to L first)
+
+right dorsal: K (in game change the keyboard button for "speed movement -" to K first)
