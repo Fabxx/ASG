@@ -69,6 +69,10 @@ SCCT_ARGS="-nointro"
 
 isXbmcScript=2
 
+# Flag to allow the user to select the boot animation xex file for the xbox 360 emulator.
+
+isDashboard=2
+
 # Rom sorter.
 
 SortRoms()
@@ -140,6 +144,31 @@ Parser()
 		zenity --info --text="Select XBMC.exe file"
 		xmbcExecutable=$(zenity --title="select XBMC executable" --file-selection)
 	fi
+	fi
+
+	# If the user wants to load the boot animation for xenia before launching the game, let him select the xex file for the boot anim to load.
+
+	if [[ $isDashboard -ne 0 && $isDashboard -ne 1 ]]; then
+	zenity --question --text="Do you wan to launch the boot animation for xenia before launching the game? Will ask once."
+
+	fi
+
+	if [[ $? -eq 1 ]]; then
+		isDashboard=0
+	else
+		isDashboard=1
+		zenity --info --text="Note: you need the netplay_dashboard build from wildmaster84 fork in the github actions, until fixes get merged."
+		zenity --info --text="Select boot anim.xex or \$flash_bootanim.xex file"
+		tmpFile=$(zenity --title="select dashboard file" --file-selection)
+
+		if [[ "$(basename "$tmpFile")" == "\$flash_bootanim.xex" ]]; then
+
+			dashFile="${tmpFile//$/\\$}" # add escape char for $ symbol in filename
+
+		else
+
+			dashFile="$tmpFile"
+		fi
 	fi
 
 	for folder in "$path_games"/*; do cd "$folder";
@@ -220,7 +249,30 @@ Parser()
 		;;
 		
 		2) #Xenia
+
+		if [[ $isDashboard -eq 1 ]]; then
+
+			tmpName=$(basename "$path_executable")
+
+			# Process name on ps -u is xenia_canary_ne, the name gets truncated for whatever reason.
+			processName=${tmpName::-9}
+
+			echo -e wine \""$path_executable"\" "" \""$dashFile"\" "&" "\n" >> start.sh
+
+			echo -e "sleep 15" "\n" >> start.sh
+
+			echo -e "if [[ \$(pidof \""$processName"\") != \"""\" ]] then" "\n" >> start.sh
+
+			echo -e "pkill -9 $processName" "\n" >> start.sh
+
+			echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" "\n" >> start.sh
+
+			echo -e "fi" >> start.sh
+ 		else
+
 	    echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" "\n" >> start.sh
+
+	    fi
 		;;
 
 		3) #cxbx-r
