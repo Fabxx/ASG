@@ -4,7 +4,7 @@
 
 # Info message for auto sort option
 
-msg="moves roms into folders to generate start.sh per game. 2MB of free space is required.\n
+msg="moves roms into folders to generate "$(basename "$folder").sh" per game. 2MB of free space is required.\n
 If a game requires multiple files with different extensions (like duckstation with .bin and .cue), 
 just rename the files with the same name and keep the extension as is.\n
 These emulators don't need sorting and function can be skipped:\n
@@ -15,7 +15,7 @@ These emulators don't need sorting and function can be skipped:\n
 # Emulator Arguments
 
 xemu_args="-full-screen -dvd_path"
-xenia_args="--gpu vulkan"
+xenia_args="--fullscreen=true"
 pcsx2_args="-fullscreen"
 mgba_args="-f"
 dolphin_args="--config=Dolphin.Display.Fullscreen=True"
@@ -130,7 +130,7 @@ SortRoms()
 
 Parser()
 {
-	# If the user is generating runners to launch through XBMC Python scripts, the start.sh must kill
+	# If the user is generating runners to launch through XBMC Python scripts, the "$(basename "$folder").sh" must kill
 	# XBMC to avoid input priority over the UI. then if the PID of the exe doesn't exist anymore
 	# the sh file re-runs XBMC executable again. Extra echos are at the end before the cd ..
 	
@@ -148,34 +148,33 @@ Parser()
 
 	# If the user wants to load the boot animation for xenia before launching the game, let him select the xex file for the boot anim to load.
 
-	if [[ $isDashboard -ne 0 && $isDashboard -ne 1 ]]; then
+	if [[ $parserList -eq 3 && $parser_ID -eq 2 ]]; then
 	zenity --question --text="Do you wan to launch the boot animation for xenia before launching the game? Will ask once."
 
-	fi
-
-	if [[ $? -eq 1 ]]; then
-		isDashboard=0
-	else
-		isDashboard=1
-		zenity --info --text="Note: you need the netplay_dashboard build from wildmaster84 fork in the github actions, until fixes get merged."
-		zenity --info --text="Select boot anim.xex or \$flash_bootanim.xex file"
-		tmpFile=$(zenity --title="select dashboard file" --file-selection)
-
-		if [[ "$(basename "$tmpFile")" == "\$flash_bootanim.xex" ]]; then
-
-			dashFile="${tmpFile//$/\\$}" # add escape char for $ symbol in filename
-
+		if [[ $? -eq 1 ]]; then
+			isDashboard=0
 		else
+			isDashboard=1
+			zenity --info --text="Note: you need the netplay_dashboard build from wildmaster84 fork in the github actions, until fixes get merged."
+			zenity --info --text="Select boot anim.xex or \$flash_bootanim.xex file"
+			tmpFile=$(zenity --title="select dashboard file" --file-selection)
 
-			dashFile="$tmpFile"
+			if [[ "$(basename "$tmpFile")" == "\$flash_bootanim.xex" ]]; then
+
+				dashFile="${tmpFile//$/\\$}" # add escape char for $ symbol in filename
+
+			else
+
+				dashFile="$tmpFile"
+			fi
 		fi
 	fi
 
 	for folder in "$path_games"/*; do cd "$folder";
 
-	echo -e "#!/bin/bash" "\n" > start.sh
+	echo -e "#!/bin/bash" "\n" > "$(basename "$folder").sh"
 
-	echo -e "cd \"$(pwd)\"\n" >> start.sh
+	echo -e "cd \"$(pwd)\"\n" >> "$(basename "$folder").sh"
 
 	case $parserList in
 
@@ -183,19 +182,19 @@ Parser()
 		case $parser_ID in
 
 		1) #duckstation
-		echo -e \""$path_executable"\" "" \""$(ls *.cue *.iso *.img *.ecm *.chd)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.cue *.iso *.img *.ecm *.chd)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		2) #pcsx2
-		echo -e \""$path_executable"\" "" \""$(ls *.iso *.chd)"\" "" "$pcsx2_args" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.iso *.chd)"\" "" "$pcsx2_args" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		3) #ppsspp
-		echo -e \""$path_executable"\" "" \""$(ls *.iso)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.iso)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		4) #rpcs3 JB format
-		echo -e \""$path_executable"\" "" "$rpcs3_args" \""$(find ~+ -name 'EBOOT.BIN')"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" "$rpcs3_args" \""$(find ~+ -name 'EBOOT.BIN')"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		esac
@@ -206,35 +205,35 @@ Parser()
 		case $parser_ID in
 	
 		1) #citra
-		echo -e \""$path_executable"\" "" \""$(ls *.3ds *.cia)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.3ds *.cia)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		2) #melonDS
-		echo -e \""$path_executable"\" "" \""$(ls *.nds *.dsi *.ids *.app)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.nds *.dsi *.ids *.app)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		3) #Yuzu/Ryujinx
-		echo -e \""$path_executable"\" "" \""$(ls *.nsp *.xci)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.nsp *.xci)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		4) #mGBA
-		echo -e \""$path_executable"\" "" "$mgba_args" "" \""$(ls *.gba *.gbc *.gb)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" "$mgba_args" "" \""$(ls *.gba *.gbc *.gb)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		5) #mupen64
-		echo -e \""$path_executable"\" "" \""$(ls *.z64 *.v64 *.n64)"\" "$mupen_args" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.z64 *.v64 *.n64)"\" "$mupen_args" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		6) #snes9x
-		echo -e \""$path_executable"\" "" \""$(ls *.smc *.sfc)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" \""$(ls *.smc *.sfc)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		7) #Cemu
-		echo -e \""$path_executable"\" "" "$cemu_args" \""$(ls *.wud *.wux)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" "$cemu_args" \""$(ls *.wud *.wux)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		8) #Dolphin
-		echo -e \""$path_executable"\" "" --exec=\""$(ls *.wbfs *.wad *.iso *.gcz *.rvz *.dol *.elf)"\" "$dolphin_args" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" --exec=\""$(ls *.wbfs *.wad *.iso *.gcz *.rvz *.dol *.elf)"\" "$dolphin_args" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		esac
@@ -245,7 +244,7 @@ Parser()
 
 	
 		1) #Xemu
-		echo -e \""$path_executable"\" "" "$xemu_args" "" \""$(ls *.iso)"\" "\n" >> start.sh
+		echo -e \""$path_executable"\" "" "$xemu_args" "" \""$(ls *.iso)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 		
 		2) #Xenia
@@ -257,26 +256,26 @@ Parser()
 			# Process name on ps -u is xenia_canary_ne, the name gets truncated for whatever reason.
 			processName=${tmpName::-9}
 
-			echo -e wine \""$path_executable"\" "" \""$dashFile"\" "&" "\n" >> start.sh
+			echo -e wine \""$path_executable"\" "" \""$dashFile"\" "&" "\n" >> "$(basename "$folder").sh"
 
-			echo -e "sleep 15" "\n" >> start.sh
+			echo -e "sleep 15" "\n" >> "$(basename "$folder").sh"
 
-			echo -e "if [[ \$(pidof \""$processName"\") != \"""\" ]] then" "\n" >> start.sh
+			echo -e "if [[ \$(pidof \""$processName"\") != \"""\" ]] then" "\n" >> "$(basename "$folder").sh"
 
-			echo -e "pkill -9 $processName" "\n" >> start.sh
+			echo -e "pkill -9 $processName" "\n" >> "$(basename "$folder").sh"
 
-			echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" "\n" >> start.sh
+			echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" "\n" >> "$(basename "$folder").sh"
 
-			echo -e "fi" >> start.sh
+			echo -e "fi" >> "$(basename "$folder").sh"
  		else
 
-	    echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" "\n" >> start.sh
+	    echo -e wine \""$path_executable"\" "" \""$(ls *.xex *.iso *.zar)"\" \""$xenia_args"\" "\n" >> "$(basename "$folder").sh"
 
 	    fi
 		;;
 
 		3) #cxbx-r
-		echo -e wine \""$path_executable"\" "" \""$(ls *.xbe)"\" "\n" >> start.sh
+		echo -e wine \""$path_executable"\" "" \""$(ls *.xbe)"\" "\n" >> "$(basename "$folder").sh"
 		;;
 
 		esac
@@ -294,45 +293,45 @@ Parser()
 
 		if [ "$(basename "$exeFile")" == "SplinterCell.EXE" ]; then
 
-			echo -n WINEDLLOVERRIDES=\""$SC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$SC_OVERRIDE"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
 		elif [ "$(basename "$exeFile")" == "SplinterCell2.EXE" ]; then 
 
-			echo -n WINEDLLOVERRIDES=\""$SCPT_OVERRIDE"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEDLLOVERRIDES=\""$SCPT_OVERRIDE"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
 		elif [ "$(basename "$exeFile")" == "NFSC.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
 		elif [ "$(basename "$exeFile")" == "speed.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "gta3.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "gta-vc.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "gta-sa.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$DXVK_OFF"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "CMR5.EXE" ]; then 
 		
-			echo -n wine \""$exeFile"\" \""$CMR2005_ARGS"\" >> start.sh 
+			echo -n wine \""$exeFile"\" \""$CMR2005_ARGS"\" >> "$(basename "$folder").sh"
 	
 	    elif [ "$(basename "$exeFile")" == "Conviction_game.EXE" ]; then 
 		
-			echo -n WINEDLLOVERRIDES=\""$SCC_OVERRIDE"\" wine \""$exeFile"\" >> start.sh 
+			echo -n WINEDLLOVERRIDES=\""$SCC_OVERRIDE"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
 		elif [ "$(basename "$exeFile")" == "splintercell3.EXE" ]; then
 			scctPrefix="/home/$(whoami)/scctpfx"
 			WINEPREFIX="$scctPrefix" wineboot
 			WINEPREFIX="$scctPrefix" winetricks -q dxvk1103
-			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" WINEPREFIX=\""$scctPrefix"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> start.sh
+			echo -n WINEDLLOVERRIDES=\""$SCCT_OVERRIDE"\" WINEPREFIX=\""$scctPrefix"\" wine \""$exeFile"\" \""$SCCT_ARGS"\" >> "$(basename "$folder").sh"
 
 
 		elif [ "$(basename "$exeFile")" == "Blur.EXE" ]; then
@@ -340,14 +339,14 @@ Parser()
 			blurPrefix="/home/$(whoami)/blurpfx"
 			WINEPREFIX="$blurPrefix" wineboot
 			WINEPREFIX="$blurPrefix" winetricks -q vcrun2019 dxvk1030
-			echo -n WINEPREFIX=\""$blurPrefix"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEPREFIX=\""$blurPrefix"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "SR2_pc.EXE" ]; then
 			
 			sr2Prefix="/home/$(whoami)/sr2pfx"
 			WINEPREFIX="$sr2Prefix" wineboot
 			WINEPREFIX="$sr2Prefix" winetricks -q vcrun2019 dxvk xact
-			echo -n WINEPREFIX=\""$sr2Prefix"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEPREFIX=\""$sr2Prefix"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "REDRIVER2_dev.EXE" ]; then
 		
@@ -355,7 +354,7 @@ Parser()
 
 			WINEPREFIX="$drv2Prefix" WINEARCH=win32 wineboot
 			
-			echo -n WINEPREFIX=\""$drv2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> start.sh
+			echo -n WINEPREFIX=\""$drv2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		# NOTE: For Test Drive Unlimited 2 you need the Offline Launcher.
 
@@ -364,16 +363,16 @@ Parser()
 			tdu2Prefix="/home/$(whoami)/tdu2pfx"
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 wineboot
 			WINEPREFIX="$tdu2Prefix" WINEARCH=win32 winetricks ie7 dotnet40 dxvk1103 dinput8 directplay
-			echo -n WINEPREFIX=\""$tdu2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> start.sh
+			echo -n WINEPREFIX=\""$tdu2Prefix"\" WINEARCH=win32 wine \""$exeFile"\" >> "$(basename "$folder").sh"
 		
 		elif [ "$(basename "$exeFile")" == "acc.EXE" ]; then
 			
 			accPrefix="/home/$(whoami)/accpfx"
 			WINEPREFIX="$accPrefix" wineboot
 			WINEPREFIX="$accPrefix" winetricks -q vcrun2019 dxvk
-			echo -n WINEPREFIX=\""$accPrefix"\" wine \""$exeFile"\" >> start.sh
+			echo -n WINEPREFIX=\""$accPrefix"\" wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
-		else echo wine \""$exeFile"\" >> start.sh
+		else echo wine \""$exeFile"\" >> "$(basename "$folder").sh"
 
 		fi
 		;;
@@ -387,20 +386,20 @@ Parser()
 
 	# Write the script that runs XBMC once executable or emulator is closed
    if [[ $isXbmcScript -eq 1 ]]; then
-	echo -e "while true ; do\n" >> start.sh
+	echo -e "while true ; do\n" >> "$(basename "$folder").sh"
 	
 	if [[ $parserList -eq 4 ]]; then
-		echo -e "if [[ \"\$(pidof "$exeFile")\" == \"""\" ]]; then\n" >> start.sh
+		echo -e "if [[ \"\$(pidof "$exeFile")\" == \"""\" ]]; then\n" >> "$(basename "$folder").sh"
 	else 
 		emulatorExecutable=$(basename -z "$path_executable")
-		echo -e "if [[ \"\$(pidof "$emulatorExecutable")\" == \"""\" ]]; then\n" >> start.sh 
+		echo -e "if [[ \"\$(pidof "$emulatorExecutable")\" == \"""\" ]]; then\n" >> "$(basename "$folder").sh"
 	fi
 	
-	echo -e "wine \""$xmbcExecutable"\"" "\n" >> start.sh
-	echo -e "break\n" >> start.sh
-	echo -e "fi\n" >> start.sh
-	echo -e "sleep 3\n" >> start.sh
-	echo -e "done" >> start.sh
+	echo -e "wine \""$xmbcExecutable"\"" "\n" >> "$(basename "$folder").sh"
+	echo -e "break\n" >> "$(basename "$folder").sh"
+	echo -e "fi\n" >> "$(basename "$folder").sh"
+	echo -e "sleep 3\n" >> "$(basename "$folder").sh"
+	echo -e "done" >> "$(basename "$folder").sh"
 
    fi
 	
